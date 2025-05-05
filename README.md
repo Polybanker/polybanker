@@ -1,83 +1,74 @@
-# React + Vite + Hono + Cloudflare Workers
+# Polybanker
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/vite-react-template)
+A modern web application for decentralized banking services.
 
-This template provides a minimal setup for building a React application with TypeScript and Vite, designed to run on Cloudflare Workers. It features hot module replacement, ESLint integration, and the flexibility of Workers deployments.
+## Features
 
-![React + TypeScript + Vite + Cloudflare Workers](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/fc7b4b62-442b-4769-641b-ad4422d74300/public)
+- Contact form with Firebase storage
+- Email notifications via SendGrid
+- Modern UI with Tailwind CSS
+- Responsive design
+- TypeScript support
 
-<!-- dash-content-start -->
+## Prerequisites
 
-🚀 Supercharge your web development with this powerful stack:
+- Node.js (v16 or higher)
+- npm or yarn
+- Firebase account
+- SendGrid account
 
-- [**React**](https://react.dev/) - A modern UI library for building interactive interfaces
-- [**Vite**](https://vite.dev/) - Lightning-fast build tooling and development server
-- [**Hono**](https://hono.dev/) - Ultralight, modern backend framework
-- [**Cloudflare Workers**](https://developers.cloudflare.com/workers/) - Edge computing platform for global deployment
+## Environment Variables
 
-### ✨ Key Features
+Create a `.env` file in the root directory with the following variables:
 
-- 🔥 Hot Module Replacement (HMR) for rapid development
-- 📦 TypeScript support out of the box
-- 🛠️ ESLint configuration included
-- ⚡ Zero-config deployment to Cloudflare's global network
-- 🎯 API routes with Hono's elegant routing
-- 🔄 Full-stack development setup
+```env
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
 
-Get started in minutes with local development or deploy directly via the Cloudflare dashboard. Perfect for building modern, performant web applications at the edge.
-
-<!-- dash-content-end -->
-
-## Getting Started
-
-To start a new project with this template, run:
-
-```bash
-npm create cloudflare@latest -- --template=cloudflare/templates/vite-react-template
+# SendGrid Configuration
+VITE_SENDGRID_API_KEY=your_sendgrid_api_key
+VITE_SENDGRID_FROM_EMAIL=your_verified_sender_email
+VITE_CONTACT_EMAIL=your_contact_email
 ```
 
-A live deployment of this template is available at:
-[https://react-vite-template.templates.workers.dev](https://react-vite-template.templates.workers.dev)
+## Installation
 
-## Development
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/polybanker.git
+cd polybanker
+```
 
-Install dependencies:
-
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-Start the development server with:
-
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-Your application will be available at [http://localhost:5173](http://localhost:5173).
-
-## Production
-
-Build your project for production:
+## Building for Production
 
 ```bash
 npm run build
 ```
 
-Preview your build locally:
+## Contributing
 
-```bash
-npm run preview
-```
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Deploy your project to Cloudflare Workers:
+## License
 
-```bash
-npx wrangler deploy
-```
-
-## Additional Resources
-
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Vite Documentation](https://vitejs.dev/guide/)
-- [React Documentation](https://reactjs.org/)
-- [Hono Documentation](https://hono.dev/)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
