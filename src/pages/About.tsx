@@ -9,7 +9,7 @@ const values = [
   },
   {
     title: 'Integrity',
-    description: 'Building trust through transparency and ethical practices.',
+    description: 'Building trust through transparency and the highest ethical practices.',
   },
   {
     title: 'Excellence',
