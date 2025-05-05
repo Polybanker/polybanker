@@ -9,10 +9,9 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": false,  // Change this to false for emitting JS
+    "noEmit": false,  // NoEmit should be false
     "jsx": "react-jsx",
 
     /* Linting */
@@ -22,5 +21,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/react-app/**/*", "src/server/**/*"]  // Include other directories as needed
+  "include": ["src/react-app/**/*", "src/server/**/*"]  // Include all necessary directories
 }
