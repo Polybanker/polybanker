@@ -21,17 +21,15 @@ export const POST: APIRoute = async ({ request }) => {
         }),
         {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: { 'Content-Type': 'application/json' }
         }
       );
     }
 
-    const { name, email, company, phone, telegram, message, recaptchaToken } = data;
+    const { name, email, company, phone, telegram, message } = data;
 
     // Validate required fields
-    if (!name || !email || !message || !recaptchaToken) {
+    if (!name || !email || !message) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -39,51 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
         }),
         {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-    }
-
-    // Verify reCAPTCHA token
-    try {
-      const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `secret=6LfwRi8rAAAAADJYQhnZna6gBBzF9HpaJZsoTkcS&response=${recaptchaToken}`,
-      });
-
-      const recaptchaResult = await recaptchaResponse.json();
-      
-      if (!recaptchaResult.success) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: 'reCAPTCHA verification failed'
-          }),
-          {
-            status: 400,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-      }
-    } catch (e) {
-      console.error('reCAPTCHA verification error:', e);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: 'Failed to verify reCAPTCHA'
-        }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: { 'Content-Type': 'application/json' }
         }
       );
     }
@@ -100,7 +54,6 @@ export const POST: APIRoute = async ({ request }) => {
         timestamp: new Date().toISOString()
       });
 
-      // Log successful submission
       console.log('New contact form submission:', {
         id: docRef.id,
         name,
@@ -118,9 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
         }),
         {
           status: 200,
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: { 'Content-Type': 'application/json' }
         }
       );
     } catch (e) {
@@ -132,9 +83,7 @@ export const POST: APIRoute = async ({ request }) => {
         }),
         {
           status: 500,
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: { 'Content-Type': 'application/json' }
         }
       );
     }
@@ -147,10 +96,8 @@ export const POST: APIRoute = async ({ request }) => {
       }),
       {
         status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       }
     );
   }
-}; 
+};
