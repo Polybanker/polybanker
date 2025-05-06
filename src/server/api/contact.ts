@@ -1,11 +1,21 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import sgMail from '@sendgrid/mail';
 import { db } from '../../config/firebase';
 
+// Type for contact form data
+interface ContactFormData {
+  name: string;
+  email: string;
+  company?: string;
+  phone?: string;
+  telegram?: string;
+  message: string;
+}
+
 // Initialize SendGrid
-sgMail.setApiKey(import.meta.env.VITE_SENDGRID_API_KEY);
+sgMail.setApiKey(import.meta.env.VITE_SENDGRID_API_KEY || '');
 
 // Create Hono app
 const api = new Hono();
@@ -17,7 +27,7 @@ api.use('/*', cors());
 api.post('/contact', async (c) => {
   try {
     // Get form data
-    const { name, email, company, phone, telegram, message } = await c.req.json();
+    const { name, email, company, phone, telegram, message } = await c.req.json() as ContactFormData;
 
     // Validate required fields
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
@@ -28,7 +38,7 @@ api.post('/contact', async (c) => {
     }
 
     // Store in Firebase
-    const docRef = await addDoc(collection(db, 'contact_submissions'), {
+    await addDoc(collection(db, 'contact_submissions'), {
       name: name.trim(),
       email: email.trim(),
       company: company?.trim() || '',
@@ -40,8 +50,8 @@ api.post('/contact', async (c) => {
 
     // Send email notification
     const msg = {
-      to: import.meta.env.VITE_CONTACT_EMAIL,
-      from: import.meta.env.VITE_SENDGRID_FROM_EMAIL,
+      to: import.meta.env.VITE_CONTACT_EMAIL || '',
+      from: import.meta.env.VITE_SENDGRID_FROM_EMAIL || '',
       subject: 'New Contact Form Submission',
       text: `
         New contact form submission from ${name.trim()}
@@ -81,4 +91,4 @@ api.post('/contact', async (c) => {
   }
 });
 
-export default api; 
+export default api;

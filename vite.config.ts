@@ -6,7 +6,24 @@ import { cors } from 'hono/cors';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { firebaseConfig } from './src/config/firebase';
-import api from './src/server/api/contact';
+import type { IncomingMessage, ServerResponse } from 'http';
+
+// Define types for recaptcha response
+interface RecaptchaVerificationResult {
+  success: boolean;
+  'error-codes'?: string[];
+}
+
+// Define types for contact form data
+interface ContactFormData {
+  name: string;
+  email: string;
+  company?: string;
+  phone?: string;
+  telegram?: string;
+  message: string;
+  recaptchaToken: string;
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -21,7 +38,7 @@ apiHono.use('/*', cors());
 // Contact form endpoint
 apiHono.post('/contact', async (c) => {
   try {
-    const data = await c.req.json();
+    const data = await c.req.json() as ContactFormData;
     const { name, email, company, phone, telegram, message, recaptchaToken } = data;
 
     // Validate required fields
@@ -40,16 +57,13 @@ apiHono.post('/contact', async (c) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          secret: process.env.VITE_RECAPTCHA_SECRET_KEY || '',
+          secret: import.meta.env.VITE_RECAPTCHA_SECRET_KEY as string || '',
           response: recaptchaToken,
           remoteip: c.req.header('x-forwarded-for') || c.req.header('x-real-ip') || '127.0.0.1'
         }).toString()
       });
 
-      const recaptchaResult = await recaptchaResponse.json() as { 
-        success: boolean; 
-        'error-codes'?: string[];
-      };
+      const recaptchaResult = await recaptchaResponse.json() as RecaptchaVerificationResult;
       
       console.log('reCAPTCHA verification result:', {
         success: recaptchaResult.success,
@@ -120,11 +134,11 @@ export default defineConfig({
     {
       name: 'api',
       configureServer(server) {
-        server.middlewares.use('/api', async (req, res, next) => {
+        server.middlewares.use('/api', async (req: IncomingMessage, res: ServerResponse) => {
           try {
             const request = new Request(`http://localhost${req.url}`, {
               method: req.method,
-              headers: req.headers as HeadersInit,
+              headers: req.headers as Record<string, string>,
               body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined
             });
 
@@ -143,9 +157,6 @@ export default defineConfig({
     }
   ],
   define: {
-    'import.meta.env.SENDGRID_API_KEY': JSON.stringify(process.env.SENDGRID_API_KEY),
-    'import.meta.env.SENDGRID_FROM_EMAIL': JSON.stringify(process.env.SENDGRID_FROM_EMAIL),
-    'import.meta.env.CONTACT_EMAIL': JSON.stringify(process.env.CONTACT_EMAIL),
-    'process.env': process.env
+    // Environment variables are already defined in env.d.ts
   },
 });
