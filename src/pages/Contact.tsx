@@ -20,15 +20,13 @@ export default function Contact() {
     telegram: '',
     message: ''
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,30 +35,29 @@ export default function Contact() {
     setSubmitStatus(null);
 
     try {
-      // Validate required fields
-      if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      const { name, email, message } = formData;
+
+      if (!name.trim() || !email.trim() || !message.trim()) {
         throw new Error('Please fill in all required fields');
       }
 
-      // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email.trim())) {
+      if (!emailRegex.test(email.trim())) {
         throw new Error('Please enter a valid email address');
       }
 
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
+          ...formData,
+          name: name.trim(),
+          email: email.trim(),
           company: formData.company.trim(),
           phone: formData.phone.trim(),
           telegram: formData.telegram.trim(),
-          message: formData.message.trim()
-        }),
+          message: message.trim()
+        })
       });
 
       const data = await response.json();
@@ -70,14 +67,7 @@ export default function Contact() {
       }
 
       setSubmitStatus({ type: 'success', message: data.message });
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        phone: '',
-        telegram: '',
-        message: ''
-      });
+      setFormData({ name: '', email: '', company: '', phone: '', telegram: '', message: '' });
     } catch (error) {
       setSubmitStatus({
         type: 'error',
@@ -122,17 +112,33 @@ export default function Contact() {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-medium mb-2">Email</h3>
-                    <a href="mailto:hello@polybanker.com" className="text-blue-400 hover:text-blue-300">
+                    <a
+                      href="mailto:hello@polybanker.com"
+                      className="text-blue-400 hover:text-blue-300"
+                      aria-label="Email us at hello@polybanker.com"
+                    >
                       hello@polybanker.com
                     </a>
                   </div>
                   <div>
                     <h3 className="text-lg font-medium mb-2">Follow Us</h3>
                     <div className="flex space-x-4">
-                      <a href="https://twitter.com/polybanker" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                      <a
+                        href="https://twitter.com/polybanker"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300"
+                        aria-label="Follow Polybanker on Twitter"
+                      >
                         X (Twitter)
                       </a>
-                      <a href="https://linkedin.com/company/polybanker" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                      <a
+                        href="https://linkedin.com/company/polybanker"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300"
+                        aria-label="Follow Polybanker on LinkedIn"
+                      >
                         LinkedIn
                       </a>
                     </div>
@@ -141,78 +147,30 @@ export default function Contact() {
               </div>
 
               <div>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2">
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium mb-2">
-                      Company
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="telegram" className="block text-sm font-medium mb-2">
-                      Telegram
-                    </label>
-                    <input
-                      type="text"
-                      id="telegram"
-                      name="telegram"
-                      value={formData.telegram}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
+                <form onSubmit={handleSubmit} className="space-y-6" aria-label="Contact form">
+                  {[
+                    { id: 'name', label: 'Name *', type: 'text', required: true },
+                    { id: 'email', label: 'Email *', type: 'email', required: true },
+                    { id: 'company', label: 'Company', type: 'text' },
+                    { id: 'phone', label: 'Phone', type: 'tel', pattern: '[0-9\\-\\+]{9,15}' },
+                    { id: 'telegram', label: 'Telegram', type: 'text' }
+                  ].map(({ id, label, type, required, pattern }) => (
+                    <div key={id}>
+                      <label htmlFor={id} className="block text-sm font-medium mb-2">
+                        {label}
+                      </label>
+                      <input
+                        type={type}
+                        id={id}
+                        name={id}
+                        value={formData[id as keyof FormData]}
+                        onChange={handleChange}
+                        required={required}
+                        pattern={pattern}
+                        className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  ))}
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium mb-2">
@@ -239,9 +197,7 @@ export default function Contact() {
                     type="submit"
                     disabled={isSubmitting}
                     className={`w-full py-3 px-6 rounded-lg font-medium text-white ${
-                      isSubmitting
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700'
+                      isSubmitting ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                     }`}
                   >
                     {isSubmitting ? 'Sending...' : 'Send Message'}
@@ -254,4 +210,4 @@ export default function Contact() {
       </div>
     </>
   );
-} 
+}
