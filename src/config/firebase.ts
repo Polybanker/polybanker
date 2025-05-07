@@ -1,7 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
-import { getStorage } from 'firebase/storage';
+import { getStorage, FirebaseStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBxQw8QwQwQwQwQwQwQwQwQwQwQwQwQwQ",
@@ -17,15 +17,13 @@ const firebaseConfig = {
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
 let analytics;
-let storage;
+let storage: FirebaseStorage | undefined;
 
 const isClient = typeof globalThis !== 'undefined' && 'window' in globalThis;
 
 if (isClient) {
-  if (isClient) {
-    analytics = getAnalytics(app);
-  }
+  analytics = getAnalytics(app);
   storage = getStorage(app);
 }
 
-export { app, db, analytics, storage, firebaseConfig }; 
+export { app, db, analytics, storage, firebaseConfig };

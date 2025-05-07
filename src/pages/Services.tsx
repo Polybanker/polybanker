@@ -1,5 +1,4 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
+// React is automatically imported by the JSX transform
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -303,4 +302,4 @@ export default function Services() {
       </div>
     </>
   );
-} 
+}

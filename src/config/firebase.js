@@ -18,9 +18,7 @@ let analytics;
 let storage;
 const isClient = typeof globalThis !== 'undefined' && 'window' in globalThis;
 if (isClient) {
-    if (isClient) {
-        analytics = getAnalytics(app);
-    }
+    analytics = getAnalytics(app);
     storage = getStorage(app);
 }
 export { app, db, analytics, storage, firebaseConfig };

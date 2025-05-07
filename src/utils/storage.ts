@@ -1,7 +1,13 @@
 import { storage } from '../config/firebase';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
+// Ensure storage is defined before using it
+if (!storage) {
+  throw new Error('Firebase storage is not initialized');
+}
+
 export const uploadFile = async (file: File, path: string): Promise<string> => {
+  if (!storage) throw new Error('Firebase storage is not initialized');
   try {
     const storageRef = ref(storage, path);
     await uploadBytes(storageRef, file);
@@ -14,6 +20,7 @@ export const uploadFile = async (file: File, path: string): Promise<string> => {
 };
 
 export const deleteFile = async (path: string): Promise<void> => {
+  if (!storage) throw new Error('Firebase storage is not initialized');
   try {
     const storageRef = ref(storage, path);
     await deleteObject(storageRef);
@@ -24,6 +31,7 @@ export const deleteFile = async (path: string): Promise<void> => {
 };
 
 export const getFileURL = async (path: string): Promise<string> => {
+  if (!storage) throw new Error('Firebase storage is not initialized');
   try {
     const storageRef = ref(storage, path);
     return await getDownloadURL(storageRef);
@@ -31,4 +39,4 @@ export const getFileURL = async (path: string): Promise<string> => {
     console.error('Error getting file URL:', error);
     throw new Error('Failed to get file URL');
   }
-}; 
+};

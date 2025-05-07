@@ -1,4 +1,4 @@
-import React from 'react';
+// React is automatically imported by the JSX transform in React 17+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
@@ -45,4 +45,4 @@ export default function App() {
       </Provider>
     </ErrorBoundary>
   );
-} 
+}

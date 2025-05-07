@@ -1,4 +1,4 @@
-import React from 'react';
+// React is automatically imported by the JSX transform in React 17+
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 
@@ -137,4 +137,4 @@ export default function About() {
       </section>
     </>
   );
-} 
+}

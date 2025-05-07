@@ -8,6 +8,11 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { firebaseConfig } from './src/config/firebase';
 import type { IncomingMessage, ServerResponse } from 'http';
 
+// Extend IncomingMessage type to include body property
+interface ExtendedIncomingMessage extends IncomingMessage {
+  body?: any;
+}
+
 // Define types for recaptcha response
 interface RecaptchaVerificationResult {
   success: boolean;
@@ -57,7 +62,7 @@ apiHono.post('/contact', async (c) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          secret: import.meta.env.VITE_RECAPTCHA_SECRET_KEY as string || '',
+          secret: process.env.VITE_RECAPTCHA_SECRET_KEY || '',
           response: recaptchaToken,
           remoteip: c.req.header('x-forwarded-for') || c.req.header('x-real-ip') || '127.0.0.1'
         }).toString()
@@ -134,11 +139,18 @@ export default defineConfig({
     {
       name: 'api',
       configureServer(server) {
-        server.middlewares.use('/api', async (req: IncomingMessage, res: ServerResponse) => {
+        server.middlewares.use('/api', async (req: ExtendedIncomingMessage, res: ServerResponse) => {
           try {
+            const headers = new Headers();
+            Object.entries(req.headers).forEach(([key, value]) => {
+              if (value) {
+                headers.set(key.toLowerCase(), Array.isArray(value) ? value.join(', ') : value);
+              }
+            });
+
             const request = new Request(`http://localhost${req.url}`, {
               method: req.method,
-              headers: req.headers as Record<string, string>,
+              headers,
               body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined
             });
 

@@ -4,7 +4,8 @@ import { collection, addDoc } from 'firebase/firestore';
 import sgMail from '@sendgrid/mail';
 import { db } from '../../config/firebase';
 // Initialize SendGrid
-sgMail.setApiKey(process.env.VITE_SENDGRID_API_KEY || '');
+const sendgridApiKey = process.env.VITE_SENDGRID_API_KEY || '';
+sgMail.setApiKey(sendgridApiKey);
 // Create Hono app
 const api = new Hono();
 // Add CORS middleware

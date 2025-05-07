@@ -15,7 +15,8 @@ interface ContactFormData {
 }
 
 // Initialize SendGrid
-sgMail.setApiKey(import.meta.env.VITE_SENDGRID_API_KEY || '');
+const sendgridApiKey = process.env.VITE_SENDGRID_API_KEY || '';
+sgMail.setApiKey(sendgridApiKey);
 
 // Create Hono app
 const api = new Hono();
@@ -50,8 +51,8 @@ api.post('/contact', async (c) => {
 
     // Send email notification
     const msg = {
-      to: import.meta.env.VITE_CONTACT_EMAIL || '',
-      from: import.meta.env.VITE_SENDGRID_FROM_EMAIL || '',
+      to: process.env.VITE_CONTACT_EMAIL || '',
+      from: process.env.VITE_SENDGRID_FROM_EMAIL || '',
       subject: 'New Contact Form Submission',
       text: `
         New contact form submission from ${name.trim()}
